@@ -1,10 +1,11 @@
-require 'player.rb'
+require_relative '../lib/player'
 
 describe Player do
 
-  describe "#new" do
-    it "creates an instance of Player" do
-      expect(subject).to be_an_instance_of(Player)
+  describe "attributes" do
+    it "allows reading/writing to :marker" do
+      subject.marker = "X"
+      expect(subject.marker).to eq("X")
     end
   end
 
