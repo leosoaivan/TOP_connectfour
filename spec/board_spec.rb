@@ -9,18 +9,4 @@ describe Board do
     end
   end
 
-  describe "#column_inbounds?" do
-    it "returns true if the column in within bounds" do
-      c = 6
-      expect(subject.column_inbounds?(c)).to be(true)
-    end
-  end
-
-  describe "#column_has_space?" do
-    it "returns true if the column still has space" do
-      subject.c.last[0] = ""
-      expect(subject.column_has_space?(0)).to be(true)
-    end
-  end
-
 end
