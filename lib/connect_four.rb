@@ -13,10 +13,13 @@ class Connect
 
   def game_loop
     @game.add_turn
+    current_move = ""
     begin
       @game.current_player.request_column
-      move = @game.current_player.chosen_column
-    end until @game.validate_column(move) == true
+      current_move = @game.current_player.chosen_column
+    end until @game.validate_column(current_move) == true
+    find_empty_row(current_move)
+    add_piece(current_move)
   end
 
 end

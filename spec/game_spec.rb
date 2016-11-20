@@ -60,4 +60,21 @@ describe Game do
     end
   end
 
+  describe "#find_empty_row" do
+    it "returns the first empty row in a column" do
+      column = 6
+      subject.board.c[5][6] = "X"
+      expect(subject.find_empty_row(column)).to eq(4)
+    end
+  end
+
+  describe "#add_piece" do
+    it "adds the current player's piece to the board" do
+      subject.current_player.marker = "X"
+      subject.board.c[4][6] = "X"
+      subject.add_piece(6)
+      expect(subject.board.c[3][6]).to eq("X")
+    end
+  end
+
 end

@@ -8,6 +8,7 @@ class Game
     @board = Board.new
     @player1 = Player.new("Player 1", "\u{25EF} ")
     @player2 = Player.new("Player 2", "\u{2B24} ")
+    @current_player = nil
     @turns = 0
   end
 
@@ -20,7 +21,7 @@ class Game
   end
 
   def current_player
-    @turns % 2 == 0 ? @player2 : @player1
+    @turns % 2 == 0 ? @current_player = @player2 : @current_player = @player1
   end
 
   def add_turn
@@ -42,6 +43,21 @@ class Game
       puts "That is not a valid column, or the column is full. Try again!"
       false
     end
+  end
+
+  def find_empty_row(column)
+    (@board.c.length - 1).times do |row|
+      if @board.c[row + 1][column].empty?
+        next
+      else
+        return row
+      end
+    end
+  end
+
+  def add_piece(column)
+    row = find_empty_row(column)
+    @board.c[row][column] = @current_player.marker
   end
 
 end
