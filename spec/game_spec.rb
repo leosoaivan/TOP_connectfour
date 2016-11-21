@@ -45,13 +45,14 @@ describe Game do
 
   describe "#column_has_space?" do
     it "returns true if the column still has space" do
-      subject.board.c.first[0] = ""
+      subject.board.c[0][0] = " "
       expect(subject.column_has_space?(0)).to be(true)
     end
   end
 
   describe "#validate_column" do
     it "returns true if the column can be played" do
+      subject.board.c.first[6] = " "
       expect(subject.validate_column(6)).to be(true)
     end
     it "returns false if the column cannot be played" do
@@ -63,7 +64,7 @@ describe Game do
   describe "#find_empty_row" do
     it "returns the first empty row in a column" do
       column = 6
-      subject.board.c[5][6] = "X"
+      subject.board.c[5][column] = "X"
       expect(subject.find_empty_row(column)).to eq(4)
     end
   end

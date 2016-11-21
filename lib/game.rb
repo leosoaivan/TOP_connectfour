@@ -1,13 +1,14 @@
 require_relative './board'
 require_relative './player'
+require 'pry'
 
 class Game
   attr_accessor :board, :player1, :player2, :turns
 
   def initialize
     @board = Board.new
-    @player1 = Player.new("Player 1", "\u{25EF} ")
-    @player2 = Player.new("Player 2", "\u{2B24} ")
+    @player1 = Player.new("Player 1", "\u{25EF}")
+    @player2 = Player.new("Player 2", "\u{2B24}")
     @current_player = nil
     @turns = 0
   end
@@ -33,7 +34,7 @@ class Game
   end
 
   def column_has_space?(column)
-    @board.c[0][column].empty? ? true : false
+    (/\s+/ =~ @board.c[0][column]) == 0 ? true : false
   end
 
   def validate_column(column)
@@ -47,7 +48,7 @@ class Game
 
   def find_empty_row(column)
     (@board.c.length - 1).times do |row|
-      if @board.c[row + 1][column].empty?
+      if (/\s+/ =~ @board.c[row + 1][column]) == 0
         next
       else
         return row
@@ -58,6 +59,17 @@ class Game
   def add_piece(column)
     row = find_empty_row(column)
     @board.c[row][column] = @current_player.marker
+  end
+
+  def welcome_message
+    puts "*********************************************************************"
+    puts "*                          CONNECT FOUR                             *"
+    puts "*                                                                   *"
+    puts "*      Welcome to a command line implementation of Connect          *"
+    puts "*   Four! Your goal is to get 4 of your pieces in a row, in any     *"
+    puts "*                      direction. Have fun!                         *"
+    puts "*********************************************************************"
+    puts
   end
 
 end
