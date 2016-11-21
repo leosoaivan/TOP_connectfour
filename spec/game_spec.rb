@@ -77,7 +77,8 @@ describe Game do
       subject.board.c[1][6] = "X"
       subject.board.c[2][6] = "X"
       subject.board.c[3][6] = "X"
-      subject.last_move = [0, 6]
+      subject.row = 0
+      subject.col = 6
       expect(subject.vertical_win?).to be(true)
     end
   end
@@ -85,11 +86,33 @@ describe Game do
   describe "#right_diag_win?" do
     it "returns true if 4 right-diagonally-aligned markers match" do
       subject.board.c[0][0] = "X"
-      subject.board.c[1][1] = "O"
+      subject.board.c[1][1] = "X"
       subject.board.c[2][2] = "X"
       subject.board.c[3][3] = "X"
-      subject.last_move = [0, 0]
+      subject.row = 0
+      subject.col = 0
       expect(subject.right_diag_win?).to be(true)
+    end
+  end
+
+  describe "#left_diag_win?" do
+    it "returns true if 4 left-diagonally-aligned markers match" do
+      subject.board.c[3][0] = "X"
+      subject.board.c[2][1] = "X"
+      subject.board.c[1][2] = "X"
+      subject.board.c[0][3] = "X"
+      subject.row = 3
+      subject.col = 0
+      expect(subject.left_diag_win?).to be(true)
+    end
+  end
+
+  describe "#horizontal_win?" do
+    it "returns true if 4 horizontally-aligned markers match" do
+      subject.board.c[0][0] = "X"
+      subject.board.c[0][1] = "X"
+      subject.board.c[0][2] = "X"
+      subject.board.c[0][3] = "X"
     end
   end
 

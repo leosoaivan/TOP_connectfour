@@ -3,7 +3,7 @@ require_relative './player'
 require 'pry'
 
 class Game
-  attr_accessor :board, :player1, :player2, :turns, :last_move
+  attr_accessor :board, :player1, :player2, :turns, :last_move, :row, :col
 
   def initialize
     @board = Board.new
@@ -12,6 +12,8 @@ class Game
     @current_player = nil
     @turns = 0
     @last_move = []
+    @row = nil
+    @col = nil
   end
 
   def welcome_message
@@ -64,6 +66,8 @@ class Game
     row = find_empty_row(column)
     @board.c[row][column] = @current_player.marker
     @last_move = [row, column]
+    @row = row
+    @col = column
   end
 
   def vertical_win?
@@ -72,6 +76,10 @@ class Game
 
   def right_diag_win?
     right_diag_upcount + right_diag_downcount >= 3 ? true : false
+  end
+
+  def left_diag_win?
+    left_diag_upcount + right_diag_downcount >= 3 ? true : false
   end
 
   private
@@ -85,36 +93,41 @@ class Game
   end
 
   def vertical_ary
-    row, column = @last_move[0], @last_move[1]
     vert_ary = []
     (0..3).each do |count|
-      vert_ary << @board.c[row + count][column]
+      vert_ary << @board.c[@row + count][@col]
     end
     vert_ary
   end
 
   def right_diag_downcount
-    row, column = @last_move[0], @last_move[1]
     same = 0
     3.times do |shift|
-      if @board.c[row][column] == @board.c[row + shift][column + shift]
-        same += 1
-      else
-        break
-      end
+      @board.c[@row][@col] == @board.c[@row + shift][@col + shift] ? same += 1 : break
     end
     same
   end
 
   def right_diag_upcount
-    row, column = @last_move[0], @last_move[1]
     same = 0
     3.times do |shift|
-      if @board.c[row][column] == @board.c[row - shift][column - shift]
-        same += 1
-      else
-        break
-      end
+      @board.c[@row][@col] == @board.c[@row - shift][@col - shift] ? same += 1 : break
+    end
+    same
+  end
+
+  def left_diag_downcount
+    same = 0
+    3.times do |shift|
+      @board.c[@row][@col] == @board.c[@row + shift][@col - shift] ? same += 1 : break
+    end
+    same
+  end
+
+  def left_diag_upcount
+    same = 0
+    3.times do |shift|
+      @board.c[@row][@col] == @board.c[@row - shift][@col + shift] ? same += 1 : break
     end
     same
   end
