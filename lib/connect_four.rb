@@ -12,7 +12,6 @@ class Connect
     @game.request_names
     game_loop
     game_results
-    new_game
   end
 
   def game_loop
