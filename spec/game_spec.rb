@@ -55,15 +55,12 @@ describe Game do
   end
 
   describe "#add_piece" do
-    before (:context) do
-      @game = Game.new
-      @game.current_player.marker = "X"
-      @game.board.c[4][6] = "X"
-      @game.add_piece(6)
-    end
-
     it "adds the current player's piece to the board" do
-      expect(@game.board.c[3][6]).to eq("X")
+      subject = Game.new
+      subject.current_player.marker = "X"
+      subject.board.c[4][6] = "X"
+      subject.add_piece(6)
+      expect(subject.board.c[3][6]).to eq("X")
     end
   end
 
