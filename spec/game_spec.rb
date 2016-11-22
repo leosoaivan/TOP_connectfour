@@ -49,9 +49,8 @@ describe Game do
 
   describe "#find_empty_row" do
     it "returns the first empty row in a column" do
-      column = 6
-      subject.board.c[5][column] = "X"
-      expect(subject.find_empty_row(column)).to eq(4)
+      subject.board.c[4][0] = "X"
+      expect(subject.find_empty_row(0)).to eq(3)
     end
   end
 
@@ -65,9 +64,6 @@ describe Game do
 
     it "adds the current player's piece to the board" do
       expect(@game.board.c[3][6]).to eq("X")
-    end
-    it "returns the coordinates of the last move" do
-      expect(@game.last_move).to eq([3, 6])
     end
   end
 
@@ -83,6 +79,18 @@ describe Game do
     end
   end
 
+  describe "#left_diag_win?" do
+    it "returns true if 4 left-diagonally-aligned markers match" do
+      subject.board.c[3][0] = "X"
+      subject.board.c[2][1] = "X"
+      subject.board.c[1][2] = "X"
+      subject.board.c[0][3] = "X"
+      subject.row = 0
+      subject.col = 3
+      expect(subject.left_diag_win?).to be(true)
+    end
+  end
+
   describe "#right_diag_win?" do
     it "returns true if 4 right-diagonally-aligned markers match" do
       subject.board.c[0][0] = "X"
@@ -95,25 +103,67 @@ describe Game do
     end
   end
 
-  describe "#left_diag_win?" do
-    it "returns true if 4 left-diagonally-aligned markers match" do
-      subject.board.c[3][0] = "X"
-      subject.board.c[2][1] = "X"
-      subject.board.c[1][2] = "X"
-      subject.board.c[0][3] = "X"
-      subject.row = 3
-      subject.col = 0
-      expect(subject.left_diag_win?).to be(true)
-    end
-  end
-
   describe "#horizontal_win?" do
     it "returns true if 4 horizontally-aligned markers match" do
       subject.board.c[0][0] = "X"
       subject.board.c[0][1] = "X"
       subject.board.c[0][2] = "X"
       subject.board.c[0][3] = "X"
+      subject.row = 0
+      subject.col = 0
+      expect(subject.horizontal_win?).to be(true)
     end
   end
 
 end
+
+
+# describe "#vertical_ary" do
+#   it "returns an array of downward vertically-aligned pieces" do
+#     subject.board.c[0][5] = "X"
+#     subject.row = 0
+#     subject.col = 5
+#     expect(subject.vertical_ary).to eq(["X", " ", " ", " "])
+#   end
+#   it "returns nils if out of bound" do
+#     subject.board.c[4][5] = "X"
+#     subject.row = 4
+#     subject.col = 5
+#     expect(subject.vertical_ary).to eq(["X", " ", nil, nil])
+#   end
+# end
+#
+# describe "#right_diag_downcount" do
+#   it "returns a count of right-down-diagonal matches" do
+#     subject.board.c[0][0] = "X"
+#     subject.board.c[1][1] = "X"
+#     subject.board.c[2][2] = "X"
+#     subject.board.c[3][3] = "X"
+#     subject.row = 0
+#     subject.col = 0
+#     expect(subject.right_diag_downcount).to eq(3)
+#   end
+# end
+#
+# describe "left_diag_downcount" do
+#   it "returns the sum of similar markers" do
+#     subject.board.c[5][1] = "X"
+#     subject.board.c[4][2] = "X"
+#     subject.board.c[3][3] = "X"
+#     subject.row = 3
+#     subject.col = 3
+#     expect(subject.left_diag_downcount).to eq(2)
+#   end
+# end
+#
+# describe "left_diag_upcount" do
+#   it "returns the sum of similar markers" do
+#     subject.board.c[0][0] = "X"
+#     subject.board.c[1][1] = "X"
+#     subject.board.c[2][2] = "X"
+#     subject.board.c[3][3] = "X"
+#     subject.row = 3
+#     subject.col = 3
+#     expect(subject.left_diag_upcount).to eq(3)
+#   end
+# end

@@ -3,7 +3,7 @@ require_relative './player'
 require 'pry'
 
 class Game
-  attr_accessor :board, :player1, :player2, :turns, :last_move, :row, :col
+  attr_accessor :board, :player1, :player2, :turns, :row, :col
 
   def initialize
     @board = Board.new
@@ -11,9 +11,8 @@ class Game
     @player2 = Player.new("Player 2", "\u{2B24}")
     @current_player = nil
     @turns = 0
-    @last_move = []
-    @row = nil
-    @col = nil
+    @row = 0
+    @col = 0
   end
 
   def welcome_message
@@ -53,21 +52,26 @@ class Game
   end
 
   def find_empty_row(column)
-    (@board.c.length - 1).times do |row|
+    row = 0
+    until row == @board.c.length - 1
       if (/\s+/ =~ @board.c[row + 1][column]) == 0
-        next
+        row += 1
       else
-        return row
+        break
       end
     end
+    row
   end
 
   def add_piece(column)
     row = find_empty_row(column)
     @board.c[row][column] = @current_player.marker
-    @last_move = [row, column]
     @row = row
     @col = column
+  end
+
+  def win?
+    (vertical_win? || horizontal_win?) || (right_diag_win? || left_diag_win?)
   end
 
   def vertical_win?
@@ -75,11 +79,15 @@ class Game
   end
 
   def right_diag_win?
-    right_diag_upcount + right_diag_downcount >= 3 ? true : false
+    right_diag_downcount + left_diag_upcount >= 3 ? true : false
   end
 
   def left_diag_win?
-    left_diag_upcount + right_diag_downcount >= 3 ? true : false
+    left_diag_downcount + right_diag_upcount >= 3 ? true : false
+  end
+
+  def horizontal_win?
+    left_count + right_count >= 3 ? true : false
   end
 
   private
@@ -95,39 +103,83 @@ class Game
   def vertical_ary
     vert_ary = []
     (0..3).each do |count|
-      vert_ary << @board.c[@row + count][@col]
+      if @board.c[@row + count].nil?
+        vert_ary << nil
+      else
+        vert_ary << @board.c[@row + count][@col]
+      end
     end
     vert_ary
   end
 
   def right_diag_downcount
     same = 0
-    3.times do |shift|
-      @board.c[@row][@col] == @board.c[@row + shift][@col + shift] ? same += 1 : break
+    (1..3).each do |shift|
+      if @board.c[@row + shift].nil? || @board.c[@row][@col].nil?
+        break
+      elsif @board.c[@row][@col] == @board.c[@row + shift][@col + shift]
+        same += 1
+      else
+        break
+      end
     end
     same
   end
 
   def right_diag_upcount
     same = 0
-    3.times do |shift|
-      @board.c[@row][@col] == @board.c[@row - shift][@col - shift] ? same += 1 : break
+    (1..3).each do |shift|
+      if @board.c[@row - shift].nil? || @board.c[@row][@col].nil?
+        break
+      elsif @board.c[@row][@col] == @board.c[@row - shift][@col + shift]
+        same += 1
+      else
+        break
+      end
     end
     same
   end
 
   def left_diag_downcount
     same = 0
-    3.times do |shift|
-      @board.c[@row][@col] == @board.c[@row + shift][@col - shift] ? same += 1 : break
+    (1..3).each do |shift|
+      if @board.c[@row + shift].nil? || @board.c[@row][@col].nil?
+        break
+      elsif @board.c[@row][@col] == @board.c[@row + shift][@col - shift]
+        same += 1
+      else
+        break
+      end
     end
     same
   end
 
   def left_diag_upcount
     same = 0
-    3.times do |shift|
-      @board.c[@row][@col] == @board.c[@row - shift][@col + shift] ? same += 1 : break
+    (1..3).each do |shift|
+      if @board.c[@row - shift].nil? || @board.c[@row][@col].nil?
+        break
+      elsif @board.c[@row][@col] == @board.c[@row - shift][@col - shift]
+        same += 1
+      else
+        break
+      end
+    end
+    same
+  end
+
+  def left_count
+    same = 0
+    (1..3).each do |shift|
+      @board.c[@row][@col] == @board.c[@row][@col - shift] ? same += 1 : break
+    end
+    same
+  end
+
+  def right_count
+    same = 0
+    (1..3).each do |shift|
+      @board.c[@row][@col] == @board.c[@row][@col + shift] ? same += 1 : break
     end
     same
   end

@@ -1,5 +1,5 @@
 class Board
-  attr_accessor :c, :column
+  attr_accessor :c, :size
 
   def initialize
     @c = [
@@ -10,6 +10,7 @@ class Board
       [" ", " ", " ", " ", " ", " ", " "],
       [" ", " ", " ", " ", " ", " ", " "]
     ]
+    @size = (@c.length * @c[1].length)
   end
 
   def print_board
